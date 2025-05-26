@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>프로필 페이지</title>
+  <style>
+    .profile-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      padding: 30px;
+      font-family: sans-serif;
+    }
+
+    .profile-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 100%;
+      object-fit: cover;
+      border: 2px solid black;
+      box-shadow: 0 0 10px gray;
+    }
+
+    .profile-info {
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid gray;
+      border-radius: 20px;
+      box-shadow: 0 0 10px lightcoral;
+    }
+
+    .like-btn {
+      padding: 8px 16px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .like-count {
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h3>{{ user.nickname }}의 프로필</h>
+
+  <div class="profile-container">
+    <img src="{{ user.photo_url }}" alt="프로필 사진" class="profile-photo">
+    
+    <div class="profile-info">
+      <p>나이: {{ user.age }}</p>
+      <p>성별: {{ user.gender }}</p>
+      <p>MBTI: {{ user.mbti }}</p>
+      <p>{{ user.intro }}</p>
+
+      <button id="likeButton" class="like-btn">좋아요 💖</button>
+      <div class="like-count" id="likeCount">좋아요 수 : 0</div>
+    </div>
+  </div>
+
+  <script>
+    const likeButton = document.getElementById('likeButton');
+    const likeCountSpan = document.getElementById('likeCount');
+
+    let liked = false;
+    let likeCount = 0;
+
+    likeButton.addEventListener('click', () => {
+      liked = !liked;
+
+      if (liked) {
+        likeButton.textContent = '좋아요 취소 💔';
+        likeButton.classList.add('liked');
+        likeCount++;
+      } else {
+        likeButton.textContent = '좋아요 💖';
+        likeButton.classList.remove('liked');
+        likeCount--;
+      }
+
+      likeCountSpan.textContent = "좋아요 수 : " + likeCount;
+    });
+  </script>
+
+</body>
+</html>
