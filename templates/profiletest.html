@@ -128,6 +128,29 @@
         </div>
     </div>
 
+  <script>
+  const likeButton = document.getElementById('likeButton');
+  const likeCountSpan = document.getElementById('likeCount');
+
+  let liked = false;
+  let likeCount = 0;
+
+  likeButton.addEventListener('click', () => {
+    liked = !liked;
+
+    if (liked) {
+      likeButton.textContent = '좋아요 취소 💔';
+      likeButton.classList.add('liked');
+      likeCount++;
+    } else {
+      likeButton.textContent = '좋아요 💖';
+      likeButton.classList.remove('liked');
+      likeCount--;
+    }
+
+    likeCountSpan.textContent = "좋아요 수 : " + likeCount;
+  });
+</script>
+
 </body>
 </html>
-
