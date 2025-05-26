@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좋아요 기능 test</title>
+    <style>
+        .like-btn {
+            font-size: 1.2rem;
+            background-color: white;
+            border: 2px solid #ff4d4d;
+            color: #ff4d4d;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .liked {
+            background-color: #ff4d4d;
+            color : white;
+        }
+        .like-count {
+          font-weight: bold;
+          margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>000의 프로필</h1>
+    <p>이름 : 000
+        <br>
+        나이 : 000
+        <br>
+        성별 : 000
+        <br>
+        좋
+    </p>
+    <button id="like-button" class="like-button">좋아요💖</button>
+    <div class="like-count" id="like-count">좋아요 수 : 0</div>
+    <script>
+        const likeButton = document.getElementById('likeButton');
+    const likeCountSpan = document.getElementById('likeCount');
+
+    let liked = false;
+    let likeCount = 0; // 실제로는 DB에서 가져오는 값
+
+    likeButton.addEventListener('click', () => {
+      liked = !liked;
+
+      if (liked) {
+        likeButton.textContent = '좋아요 취소 💔';
+        likeButton.classList.add('liked');
+        likeCount++;
+      } else {
+        likeButton.textContent = '좋아요 ❤️';
+        likeButton.classList.remove('liked');
+        likeCount--;
+      }
+
+      // 좋아요 수 화면에 표시
+      likeCountSpan.textContent = likeCount;
+    });
+    </script>
+
+</body>
+</html>
