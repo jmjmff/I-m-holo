@@ -18,10 +18,10 @@ passwd='admin', <br>
 database='proj-1' <br>
 
 
-1. 현재 생성된  테이블
-   ![image](https://github.com/user-attachments/assets/60f1b1ac-c35c-43a2-a9f2-3d97bf9a8302)
+1. 현재 생성된  테이블 <br>
+   ![image](https://github.com/user-attachments/assets/60f1b1ac-c35c-43a2-a9f2-3d97bf9a8302) <br>
 
-1-1 users 의 테이블 생성
+1-1 users 의 테이블 생성 
    CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
