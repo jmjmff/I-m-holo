@@ -1,6 +1,6 @@
 편집중 ---- <br>
 # mini-project1 <br>
-I-m-holo <br>
+
 
 #MySQL root 계정으로 DB 생성 <br>
 
@@ -20,7 +20,7 @@ database='proj-1' <br>
 
 1. 현재 생성된  테이블 <br>
    ![image](https://github.com/user-attachments/assets/60f1b1ac-c35c-43a2-a9f2-3d97bf9a8302) <br>
-
+'''
 1-1 users 의 테이블 생성 
    CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +46,7 @@ CREATE TABLE profiles (
     keywords TEXT,
     FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
 );
-
+'''
 -------------------------- 
 #구조
 
