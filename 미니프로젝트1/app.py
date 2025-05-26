@@ -59,14 +59,17 @@ def onboarding():
         love_style = request.form['love_style']
         preference = request.form['preference']
         keywords = request.form['keywords']
+        gender = request.form['gender']
+        phone = request.form['phone']
+        instagram = request.form['instagram']
 
         conn = get_connection()
         cursor = conn.cursor()
         try:
             cursor.execute("""
-                INSERT INTO profiles (user_email, animal_icon, mbti, age, job, location, religion, dream, love_style, preference, keywords)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (email, animal, mbti, age, job, location, religion, dream, love_style, preference, keywords))
+                INSERT INTO profiles (user_email, animal_icon, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (email, animal, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram))
             conn.commit()
         except Exception as e:
             print("❌ 온보딩 저장 실패:", e)
@@ -81,15 +84,121 @@ def onboarding():
 
 @app.route('/dashboard')
 def dashboard():
-    if 'email' in session:
-        return f"✅ 로그인 성공! 환영합니다, {session['email']}!"
-    else:
+    if 'email' not in session:
         return redirect(url_for('home'))
+
+    return render_template('dashboard.html', email=session['email'])
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
+@app.route('/explore', methods=['GET', 'POST'])
+def explore():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    gender = ''
+    animal = ''
+    profiles = []
+
+    if request.method == 'POST':
+        gender = request.form.get('gender')
+        animal = request.form.get('animal')
+
+        query = "SELECT * FROM profiles WHERE user_email != %s"
+        params = [session['email']]  # 자기 자신은 제외
+
+        if gender:
+            query += " AND gender = %s"
+            params.append(gender)
+
+        if animal:
+            query += " AND animal_icon = %s"
+            params.append(animal)
+
+        cursor.execute(query, tuple(params))
+        profiles = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("explore.html", profiles=profiles)
+
+@app.route('/like/<to_email>')
+def like_user(to_email):
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    from_email = session['email']
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            INSERT IGNORE INTO likes (from_user, to_user)
+            VALUES (%s, %s)
+        """, (from_email, to_email))
+
+        cursor.execute("""
+            SELECT id FROM likes
+            WHERE from_user = %s AND to_user = %s
+        """, (to_email, from_email))
+
+        match = cursor.fetchone()
+        conn.commit()
+
+        if match:
+            return f"💘 매칭 완료! {to_email}님과 연결되었습니다."
+        else:
+            return f"❤️ 좋아요를 보냈습니다!"
+    except Exception as e:
+        print("❌ 좋아요 오류:", e)
+        return "에러 발생"
+    finally:
+        cursor.close()
+        conn.close()
+
+
+
+@app.route('/matches')
+def matches():
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    my_email = session['email']
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # 상호 좋아요 된 사용자만 추출
+    cursor.execute("""
+        SELECT p.nickname, p.mbti, p.age, p.location, p.animal_icon, p.instagram, p.phone, p.user_email
+        FROM profiles p
+        WHERE p.user_email IN (
+            SELECT l1.to_user
+            FROM likes l1
+            JOIN likes l2
+              ON l1.to_user = l2.from_user AND l1.from_user = l2.to_user
+            WHERE l1.from_user = %s
+        )
+    """, (my_email,))
+    
+    matches = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return render_template("matches.html", matches=matches)
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

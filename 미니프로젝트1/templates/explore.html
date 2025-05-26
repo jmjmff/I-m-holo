@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 이상형 찾기</title>
+</head>
+<body>
+    <h2>💘 내 이상형 찾기</h2>
+
+    <form method="POST">
+        <label>성별:
+            <select name="gender">
+                <option value="">전체</option>
+                <option value="남자">남자</option>
+                <option value="여자">여자</option>
+            </select>
+        </label>
+
+        <label>동물 아이콘:
+            <select name="animal">
+                <option value="">전체</option>
+                <option value="사자">🦁 사자</option>
+                <option value="토끼">🐰 토끼</option>
+                <option value="고양이">🐱 고양이</option>
+                <!-- 나머지도 추가 가능 -->
+            </select>
+        </label>
+
+        <button type="submit">탐색</button>
+    </form>
+
+    <hr>
+
+    {% if profiles %}
+        {% for p in profiles %}
+            <div style="border:1px solid gray; margin:10px; padding:10px;">
+                <p><strong>닉네임:</strong> {{ p[2] }}</p>
+                <p><strong>MBTI:</strong> {{ p[3] }} / <strong>나이:</strong> {{ p[4] }}</p>
+                <p><strong>사는 곳:</strong> {{ p[6] }} / <strong>성별:</strong> {{ p[12] }}</p>
+                <p><strong>동물:</strong> {{ p[2] }}</p>
+                <a href="{{ url_for('like_user', to_email=p[1]) }}">❤️ 좋아요</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
