@@ -1,12 +1,12 @@
 from db import get_connection
 
-def register_user(email, password, nickname):
+def register_user(email, password):
     conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO users (email, password, nickname) VALUES (%s, %s, %s)",
-            (email, password, nickname)
+            "INSERT INTO users (email, password) VALUES (%s, %s)",
+            (email, password)
         )
         conn.commit()
         return True

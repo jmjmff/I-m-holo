@@ -1,0 +1,24 @@
+<h2>💬 {{ user_email }}님과의 채팅</h2>
+
+<div>
+    {% for sender, content, time in messages %}
+        <p><strong>{{ sender }}:</strong> {{ content }} ({{ time }})</p>
+    {% endfor %}
+</div>
+
+<form method="POST">
+    <input type="text" name="message" placeholder="메시지 입력" required>
+    <button type="submit">전송</button>
+</form>
+
+<br>
+
+<!-- 🔙 단순히 채팅방 나가기 -->
+<form action="{{ url_for('matches') }}" method="GET">
+    <button type="submit">🔙 채팅방 나가기</button>
+</form>
+
+<!-- ❌ 매칭 취소 (DB likes 삭제) -->
+<form action="{{ url_for('unmatch', user_email=user_email) }}" method="POST" style="margin-top:10px;">
+    <button type="submit" onclick="return confirm('정말 매칭을 취소하시겠습니까?')">❌ 매칭 취소</button>
+</form>

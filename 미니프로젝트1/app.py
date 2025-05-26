@@ -24,8 +24,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        nickname = request.form['nickname']
-        if register_user(email, password, nickname):
+        if register_user(email, password):
             session['email'] = email
             return redirect(url_for('onboarding'))  # ✅ 수정됨!
         else:
@@ -49,6 +48,7 @@ def onboarding():
 
     if request.method == 'POST':
         email = session['email']
+        nickname = request.form['nickname']
         animal = request.form['animal']
         mbti = request.form['mbti']
         age = request.form['age']
@@ -67,9 +67,9 @@ def onboarding():
         cursor = conn.cursor()
         try:
             cursor.execute("""
-                INSERT INTO profiles (user_email, animal_icon, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (email, animal, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram))
+                INSERT INTO profiles (user_email, nickname, animal_icon, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s)
+            """, (email, nickname, animal, mbti, age, job, location, religion, dream, love_style, preference, keywords, gender, phone, instagram))
             conn.commit()
         except Exception as e:
             print("❌ 온보딩 저장 실패:", e)
@@ -106,6 +106,10 @@ def explore():
     animal = ''
     profiles = []
 
+    # ✅ 내가 이미 좋아요한 사용자 리스트 가져오기
+    cursor.execute("SELECT to_user FROM likes WHERE from_user = %s", (session['email'],))
+    liked_users = [row[0] for row in cursor.fetchall()]
+
     if request.method == 'POST':
         gender = request.form.get('gender')
         animal = request.form.get('animal')
@@ -127,7 +131,8 @@ def explore():
     cursor.close()
     conn.close()
 
-    return render_template("explore.html", profiles=profiles)
+    return render_template("explore.html", profiles=profiles, liked_users=liked_users)
+
 
 @app.route('/like/<to_email>')
 def like_user(to_email):
@@ -195,8 +200,59 @@ def matches():
 
     return render_template("matches.html", matches=matches)
 
+@app.route('/chat/<user_email>', methods=['GET', 'POST'])
+def chat(user_email):
+    if 'email' not in session:
+        return redirect(url_for('home'))
 
+    my_email = session['email']
+    conn = get_connection()
+    cursor = conn.cursor()
 
+    if request.method == 'POST':
+        msg = request.form['message']
+        cursor.execute("""
+            INSERT INTO messages (sender, receiver, content)
+            VALUES (%s, %s, %s)
+        """, (my_email, user_email, msg))
+        conn.commit()
+
+    cursor.execute("""
+        SELECT sender, content, timestamp
+        FROM messages
+        WHERE (sender = %s AND receiver = %s) OR (sender = %s AND receiver = %s)
+        ORDER BY timestamp ASC
+    """, (my_email, user_email, user_email, my_email))
+    messages = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("chat.html", messages=messages, user_email=user_email)
+
+@app.route('/unmatch/<user_email>', methods=['POST'])
+def unmatch(user_email):
+    if 'email' not in session:
+        return redirect(url_for('home'))
+
+    my_email = session['email']
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            DELETE FROM likes
+            WHERE (from_user = %s AND to_user = %s)
+               OR (from_user = %s AND to_user = %s)
+        """, (my_email, user_email, user_email, my_email))
+        conn.commit()
+    except Exception as e:
+        print("❌ 매칭 취소 실패:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('matches'))
 
 
 
