@@ -45,12 +45,13 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
 
 # 프로필 작성 후 -> DB 에 올라가는 코드
 from flask import render_template, request, redirect, url_for, session
 from db import get_connection
+
+
 
 @app.route('/onboarding', methods=['GET', 'POST'])
 def onboarding():
@@ -88,3 +89,10 @@ def onboarding():
         return redirect(url_for('dashboard'))
 
     return render_template('onboarding.html')
+
+
+
+
+#############################################
+if __name__ == '__main__':
+    app.run(debug=True)
