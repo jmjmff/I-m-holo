@@ -7,9 +7,10 @@ app.secret_key = 'your-secret-key'
 
 # MySQL 설정
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'dam'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = 'proj-1'
 app.config['MYSQL_PASSWORD'] = 'admin'
-app.config['MYSQL_DB'] = 'dating_app' 
+app.config['MYSQL_DB'] = 'proj-1' 
 app.config['MYSQL_CHARSET'] = 'utf8'
 mysql = MySQL(app)
 
