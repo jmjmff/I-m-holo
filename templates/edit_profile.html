@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>내 프로필 수정</h2>
+    <form method="post">
+    이름: <input name="username" value="{{ user.username }}"><br>
+    성별: <input name="gender" value="{{ user.gender }}"><br>
+    동물 아이콘: <input name="animal_icon" value="{{ user.animal_icon }}"><br>
+    나이: <input name="age" value="{{ user.age }}"><br>
+    직업: <input name="job" value="{{ user.job }}"><br>
+    위치: <input name="location" value="{{ user.location }}"><br>
+    MBTI: <input name="mbti" value="{{ user.mbti }}"><br>
+    인스타: <input name="instagram" value="{{ user.instagram }}"><br>
+    연락처: <input name="contact" value="{{ user.contact }}"><br>
+    <button type="submit">수정</button>
+    </form>
+    <a href="/me">취소</a>
+</body>
+</html>

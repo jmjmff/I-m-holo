@@ -1,0 +1,38 @@
+<!-- 이상형 탐색 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <h2>이상형 탐색</h2>
+    <form method="post">
+    성별:
+    <select name="gender">
+        <option value="">모두</option>
+        <option value="남자">남자</option>
+        <option value="여자">여자</option>
+    </select>
+    동물 아이콘:
+    <select name="icon">
+        <option value="all">전체</option>
+        <option value="dog">강아지</option>
+        <option value="cat">고양이</option>
+        <option value="rabbit">토끼</option>
+        <!-- 추가 동물들 -->
+    </select>
+    <button type="submit">검색</button>
+    </form>
+    <div>
+    {% for u in users %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px">
+        <strong>{{ u.username }}</strong> ({{ u.age }}세 / {{ u.job }})<br>
+        {{ u.location }} / MBTI: {{ u.mbti }}<br>
+        <a href="/profile/{{ u.id }}">상세 보기</a>
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>

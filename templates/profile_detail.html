@@ -1,0 +1,22 @@
+<!-- 프로필 상세 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>{{ user.username }}님의 프로필</h2>
+    <p>성별: {{ user.gender }}</p>
+    <p>나이: {{ user.age }}</p>
+    <p>직업: {{ user.job }}</p>
+    <p>사는 곳: {{ user.location }}</p>
+    <p>MBTI: {{ user.mbti }}</p>
+    <p>동물 아이콘: {{ user.animal_icon }}</p>
+    <form method="post" action="/like/{{ user.id }}">
+    <button type="submit">좋아요</button>
+    </form>
+    <a href="/explore">뒤로가기</a>
+</body>
+</html>

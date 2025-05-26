@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>내 프로필</h2>
+    <p>이름: {{ user.username }}</p>
+    <p>성별: {{ user.gender }}</p>
+    <p>나이: {{ user.age }}</p>
+    <p>직업: {{ user.job }}</p>
+    <p>위치: {{ user.location }}</p>
+    <p>MBTI: {{ user.mbti }}</p>
+    <p>인스타그램: {{ user.instagram }}</p>
+    <p>연락처: {{ user.contact }}</p>
+    <a href="/me/edit">프로필 수정</a>
+</body>
+</html>
