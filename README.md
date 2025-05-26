@@ -20,35 +20,35 @@ database='proj-1' <br>
 
 1. 현재 생성된  테이블 <br>
    ![image](https://github.com/user-attachments/assets/60f1b1ac-c35c-43a2-a9f2-3d97bf9a8302) <br>
-'''
-1-1 users 의 테이블 생성 
-   CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password VARBINARY(255) NOT NULL,
-  nickname VARCHAR(50),
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+   
+1-1 users 의 테이블 생성 <br>
+CREATE TABLE IF NOT EXISTS users ( <br>
+  id INT AUTO_INCREMENT PRIMARY KEY, <br>
+  email VARCHAR(255) UNIQUE NOT NULL, <br>
+  password VARBINARY(255) NOT NULL, <br>
+  nickname VARCHAR(50), <br>
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP <br>
+); <br>
 
-1-2 profiles 의 테이블 생성
-CREATE TABLE profiles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_email VARCHAR(255) NOT NULL,
-    animal_icon VARCHAR(10),
-    mbti VARCHAR(4),
-    age INT,
-    job VARCHAR(100),
-    location VARCHAR(100),
-    religion VARCHAR(50),
-    dream TEXT,
-    love_style TEXT,
-    preference TEXT,
-    keywords TEXT,
-    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
-);
-'''
+1-2 profiles 의 테이블 생성 <br>
+'''CREATE TABLE profiles ( <br>
+    id INT AUTO_INCREMENT PRIMARY KEY, <br>
+    user_email VARCHAR(255) NOT NULL, <br>
+    animal_icon VARCHAR(10), <br>
+    mbti VARCHAR(4), <br>
+    age INT, <br>
+    job VARCHAR(100), <br>
+    location VARCHAR(100), <br>
+    religion VARCHAR(50), <br>
+    dream TEXT, <br>
+    love_style TEXT, <br>
+    preference TEXT, <br>
+    keywords TEXT, <br>
+    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE <br>
+); <br>
+
 -------------------------- 
-#구조
+#구조 <br>
 
 미니프로젝트1/ <br>
 ├── app.py <br>
