@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS users ( <br>
 ); <br>
 
 1-2 profiles 의 테이블 생성 <br>
-'''CREATE TABLE profiles ( <br>
+CREATE TABLE profiles ( <br>
     id INT AUTO_INCREMENT PRIMARY KEY, <br>
     user_email VARCHAR(255) NOT NULL, <br>
     animal_icon VARCHAR(10), <br>
