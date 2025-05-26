@@ -4,7 +4,7 @@ from db import *
 app = Flask(__name__)
 
 # app 사용 시 필수 변수..?
-# app.secret_key='test111'
+app.secret_key='test111'
 
 # depts = DeptDAO().get_depts() # 부서 목록 가져오기
 

@@ -1,92 +1,133 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>프로필 페이지</title>
-  <style>
-    .profile-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-      padding: 30px;
-      font-family: sans-serif;
-    }
+    <meta charset="UTF-8">
+    <title>{{ user.nickname }}의 프로필</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    .profile-photo {
-      width: 200px;
-      height: 200px;
-      border-radius: 100%;
-      object-fit: cover;
-      border: 2px solid black;
-      box-shadow: 0 0 10px gray;
-    }
+        /* 상단 네비게이션 */
+        .navbar {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            display: flex;
+            justify-content: flex-end;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
 
-    .profile-info {
-      max-width: 400px;
-      padding: 20px;
-      border: 1px solid gray;
-      border-radius: 20px;
-      box-shadow: 0 0 10px lightcoral;
-    }
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+        }
 
-    .like-btn {
-      padding: 8px 16px;
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        /* 왼쪽 메뉴 */
+        .sidebar {
+            position: fixed;
+            top: 60px; /* navbar 높이 아래에 */
+            left: 0;
+            width: 180px;
+            height: 100%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+        }
 
-    .like-count {
-      font-weight: bold;
-      margin-top: 0.5rem;
-    }
-  </style>
+        .sidebar a {
+            display: block;
+            margin: 15px 0;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* 본문 내용 */
+        .content {
+            margin-left: 200px;
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        /* 프로필 박스 */
+        .profile-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+        }
+
+        .profile-info {
+            background-color: #fff0f0;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.1);
+        }
+
+        .like-btn {
+            margin-top: 10px;
+            background-color: #ff5c5c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-  <h3>{{ user.nickname }}의 프로필</h>
-
-  <div class="profile-container">
-    <img src="{{ user.photo_url }}" alt="프로필 사진" class="profile-photo">
-    
-    <div class="profile-info">
-      <p>나이: {{ user.age }}</p>
-      <p>성별: {{ user.gender }}</p>
-      <p>MBTI: {{ user.mbti }}</p>
-      <p>{{ user.intro }}</p>
-
-      <button id="likeButton" class="like-btn">좋아요 💖</button>
-      <div class="like-count" id="likeCount">좋아요 수 : 0</div>
+    <!-- 상단 홈 버튼 -->
+    <div class="navbar">
+        <a href="/">홈 화면</a>
     </div>
-  </div>
 
-  <script>
-    const likeButton = document.getElementById('likeButton');
-    const likeCountSpan = document.getElementById('likeCount');
+    <!-- 왼쪽 사이드바 -->
+    <div class="sidebar">
+        <a href="/profile">내 프로필</a>
+        <a href="/match">매칭</a>
+        <a href="/messages">메시지</a>
+        <a href="/settings">설정</a>
+    </div>
 
-    let liked = false;
-    let likeCount = 0;
+    <!-- 본문 내용 -->
+    <div class="content">
+        <h2>{{ user.nickname }}의 프로필</h2>
 
-    likeButton.addEventListener('click', () => {
-      liked = !liked;
-
-      if (liked) {
-        likeButton.textContent = '좋아요 취소 💔';
-        likeButton.classList.add('liked');
-        likeCount++;
-      } else {
-        likeButton.textContent = '좋아요 💖';
-        likeButton.classList.remove('liked');
-        likeCount--;
-      }
-
-      likeCountSpan.textContent = "좋아요 수 : " + likeCount;
-    });
-  </script>
+        <div class="profile-box">
+            <div class="profile-img">
+                <span>프로필 사진</span>
+            </div>
+            <div class="profile-info">
+                <p>나이: {{ user.age }}</p>
+                <p>성별: {{ user.gender }}</p>
+                <p>MBTI: {{ user.mbti }}</p>
+                <p>{{ user.intro }}</p>
+                <button class="like-btn">좋아요 ❤️</button>
+                <p>좋아요 수: 0</p>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
+
