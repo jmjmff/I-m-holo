@@ -1,14 +1,13 @@
-편집중 ---- <br>
-# mini-project1 <br>
+### mini-project1 <br>
 
-##SQL 초기 설정
+# SQL 초기 설정
 #MySQL root 계정으로 DB 생성 <br>
 CREATE USER 'proj-1'@'localhost' IDENTIFIED BY 'admin'; <br>
 CREATE DATABASE `proj-1` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; <br>
 GRANT ALL PRIVILEGES ON `proj-1`.* TO 'proj-1'@'localhost'; <br>
 FLUSH PRIVILEGES; <br>
 
-#workbench 에서 계정 생성 <br>
+# workbench 에서 계정 생성 <br>
 host='127.0.0.1', <br>
 port=3306, <br>
 user='proj-1', <br>
