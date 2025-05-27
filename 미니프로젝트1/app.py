@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from auth import register_user, login_user
 from db import get_connection
+from flask_socketio import SocketIO, join_room, emit
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "b'\xd8\x03\xfaW\xca\x01\x13\xf3..."  # 세션 키
+
+# SocketIO 초기화
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def home():
@@ -200,35 +205,69 @@ def matches():
 
     return render_template("matches.html", matches=matches)
 
-@app.route('/chat/<user_email>', methods=['GET', 'POST'])
+def make_room(a, b):
+    """두 이메일로 방 이름 생성 (순서 무관)"""
+    return "_".join(sorted([a, b]))
+
+@app.route('/chat/<user_email>')
 def chat(user_email):
     if 'email' not in session:
         return redirect(url_for('home'))
 
     my_email = session['email']
+    # 채팅 기록은 최초 로드 시 한 번만 가져와서 렌더링
     conn = get_connection()
     cursor = conn.cursor()
-
-    if request.method == 'POST':
-        msg = request.form['message']
-        cursor.execute("""
-            INSERT INTO messages (sender, receiver, content)
-            VALUES (%s, %s, %s)
-        """, (my_email, user_email, msg))
-        conn.commit()
-
     cursor.execute("""
         SELECT sender, content, timestamp
         FROM messages
-        WHERE (sender = %s AND receiver = %s) OR (sender = %s AND receiver = %s)
+        WHERE (sender = %s AND receiver = %s)
+           OR (sender = %s AND receiver = %s)
         ORDER BY timestamp ASC
     """, (my_email, user_email, user_email, my_email))
     messages = cursor.fetchall()
-
     cursor.close()
     conn.close()
 
-    return render_template("chat.html", messages=messages, user_email=user_email)
+    return render_template(
+        'chat.html',
+        messages=messages,
+        my_email=my_email,
+        user_email=user_email
+    )
+
+
+@socketio.on('join')
+def on_join(data):
+    room = make_room(data['my_email'], data['user_email'])
+    join_room(room)
+
+
+@socketio.on('send_message')
+def on_send_message(data):
+    my_email = data['my_email']
+    user_email = data['user_email']
+    content = data['message']
+
+    # 1) DB에 저장
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO messages (sender, receiver, content) VALUES (%s, %s, %s)",
+        (my_email, user_email, content)
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    # 2) 브로드캐스트
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    room = make_room(my_email, user_email)
+    emit('receive_message', {
+        'sender': my_email,
+        'content': content,
+        'timestamp': timestamp
+    }, room=room)
 
 @app.route('/unmatch/<user_email>', methods=['POST'])
 def unmatch(user_email):
@@ -257,4 +296,5 @@ def unmatch(user_email):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True
+    socketio.run(app, debug=True)
